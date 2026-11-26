@@ -8,7 +8,7 @@ Entry for the make.fun bounty [One Line to Your Younger Self](https://make.fun/b
 
 The line:
 
-> Buy the Bitcoin, skip the all-nighters, and call your mother — the charts will still be there tomorrow.
+> Your mother will never say she is proud; she will put an extra roti on your plate every night, and that is the sentence.
 
 `main.ts` copies `entry.txt` to the output directory.
 
