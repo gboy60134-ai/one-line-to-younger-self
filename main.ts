@@ -1,25 +1,27 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-
-function checkLine(text: string): string {
-  const line = text.replace(/\r\n?/g, "\n").trim();
-  if (line.length === 0) throw new Error("entry.txt is empty");
-  if (line.length > 200) throw new Error(`line is ${line.length} chars, over the 200 limit`);
-  if (line.includes("\n")) throw new Error("entry must be a single line");
-  return line;
-}
+const SOURCE_NAME = "entry.txt";
+const DEST_NAME = "entry.txt";
 
 async function main(): Promise<void> {
-  const raw = await readFile(path.join(here, "entry.txt"), "utf8");
-  const line = checkLine(raw);
-  const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? process.argv[2] ?? "/output";
-  await mkdir(outDir, { recursive: true });
-  const dest = path.join(outDir, "entry.txt");
-  await writeFile(dest, line + "\n", "utf8");
-  console.log(`wrote ${line.length} chars to ${dest}`);
+  const here = import.meta.dirname;
+  const sourcePath = path.join(here, SOURCE_NAME);
+  const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+  await fs.mkdir(outDir, { recursive: true });
+  const text = await fs.readFile(sourcePath, "utf8");
+  const chars = [...text].length;
+  if (chars < 1 || chars > 200 || text.trim().length === 0) {
+    throw new Error(`entry.txt must be 1-200 non-blank characters, got ${chars}`);
+  }
+  console.log(`entry is ${chars} characters`);
+  const destPath = path.join(outDir, DEST_NAME);
+  await fs.writeFile(destPath, text, "utf8");
+  const written = await fs.readFile(destPath, "utf8");
+  if (written !== text) {
+    throw new Error("output does not match entry.txt");
+  }
+  console.log(`wrote ${destPath} (${Buffer.byteLength(text, "utf8")} bytes)`);
 }
 
 await main();

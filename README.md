@@ -8,8 +8,8 @@ Entry for the make.fun bounty [One Line to Your Younger Self](https://make.fun/b
 
 The line:
 
-> Your mother will never say she is proud; she will put an extra roti on your plate every night, and that is the sentence.
+> Your grandfather's watch will stop the week he does, and you will wear it broken for a year.
 
-`main.ts` copies `entry.txt` to the output directory.
+`main.ts` copies `entry.txt` to the output directory, resolving the entry file from the script's own directory and validating the text before writing.
 
 Made with make.fun — [make.fun/r/ba64hgf4](https://make.fun/r/ba64hgf4)
